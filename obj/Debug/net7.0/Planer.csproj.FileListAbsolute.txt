@@ -1,0 +1,14 @@
+C:\Users\kubap\Desktop\Semestr V\KCK\Planer\bin\Debug\net7.0\Planer.exe
+C:\Users\kubap\Desktop\Semestr V\KCK\Planer\bin\Debug\net7.0\Planer.deps.json
+C:\Users\kubap\Desktop\Semestr V\KCK\Planer\bin\Debug\net7.0\Planer.runtimeconfig.json
+C:\Users\kubap\Desktop\Semestr V\KCK\Planer\bin\Debug\net7.0\Planer.dll
+C:\Users\kubap\Desktop\Semestr V\KCK\Planer\bin\Debug\net7.0\Planer.pdb
+C:\Users\kubap\Desktop\Semestr V\KCK\Planer\obj\Debug\net7.0\Planer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\kubap\Desktop\Semestr V\KCK\Planer\obj\Debug\net7.0\Planer.AssemblyInfoInputs.cache
+C:\Users\kubap\Desktop\Semestr V\KCK\Planer\obj\Debug\net7.0\Planer.AssemblyInfo.cs
+C:\Users\kubap\Desktop\Semestr V\KCK\Planer\obj\Debug\net7.0\Planer.csproj.CoreCompileInputs.cache
+C:\Users\kubap\Desktop\Semestr V\KCK\Planer\obj\Debug\net7.0\Planer.dll
+C:\Users\kubap\Desktop\Semestr V\KCK\Planer\obj\Debug\net7.0\refint\Planer.dll
+C:\Users\kubap\Desktop\Semestr V\KCK\Planer\obj\Debug\net7.0\Planer.pdb
+C:\Users\kubap\Desktop\Semestr V\KCK\Planer\obj\Debug\net7.0\Planer.genruntimeconfig.cache
+C:\Users\kubap\Desktop\Semestr V\KCK\Planer\obj\Debug\net7.0\ref\Planer.dll
