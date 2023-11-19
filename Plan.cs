@@ -13,7 +13,6 @@ namespace Planer
         public int Priority;
         public string Category;
         public bool IsEventFinished;
-        public List<SmallerEvent> SmallerEvents;
         public Plan() 
         {
             EventName = string.Empty;
@@ -21,16 +20,14 @@ namespace Planer
             Priority = 0;
             Category = string.Empty;
             IsEventFinished = false;
-            SmallerEvents = new List<SmallerEvent>();
         }
-        public Plan(string eventName, int priority, string category)
+        public Plan(string eventName, DateTime dateTime, int priority, string category)
         {
             EventName = eventName;
-            Date = DateTime.Now;
+            Date = dateTime;
             Priority = priority;
             Category = category;
             IsEventFinished = false;
-            SmallerEvents = new List<SmallerEvent>();
         }
     }
 

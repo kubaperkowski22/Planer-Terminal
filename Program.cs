@@ -1,9 +1,11 @@
 ﻿using Planer;
+using System.ComponentModel.Design;
 using System.Text;
 
 bool IsProgramRunning = true;
 List<Plan> PlanList = new List<Plan>();
 string VisibleText = "";
+string VisibleTextInEdit = "";
 
 while (IsProgramRunning)
 {
@@ -95,7 +97,7 @@ Plan CreateNewPlan()
     VisibleText += name + '\n';
     Console.WriteLine("Podaj datę końca wydarzenia(RRRR-MM-DD): ");
     VisibleText += "Podaj datę końca wydarzenia(RRRR-MM-DD): \n";
-    DateTime dateTime;
+    DateTime dateTime = DateTime.Now;
 
     bool isDateTimeFormatCorrect = false;
     while (!isDateTimeFormatCorrect)
@@ -104,7 +106,7 @@ Plan CreateNewPlan()
         if (!CheckDateTimeFormat(dateTimeString))
         {
             Console.Clear();
-            Console.WriteLine(VisibleText);
+            Console.Write(VisibleText);
             continue;
         }
         dateTime = DateTime.Parse(dateTimeString);
@@ -115,7 +117,7 @@ Plan CreateNewPlan()
             Console.WriteLine("BŁĄD! Data wydarzenia nie może być wcześniejsza niż aktualna data!");
             System.Threading.Thread.Sleep(3000);
             Console.Clear();
-            Console.WriteLine(VisibleText);
+            Console.Write(VisibleText);
         }
         else
         {
@@ -139,7 +141,8 @@ Plan CreateNewPlan()
         }
         else
         {
-            Console.WriteLine(VisibleText);
+            Console.Clear();
+            Console.Write(VisibleText);
             priority = Convert.ToInt32(Console.ReadLine());
         }
     }
@@ -154,7 +157,7 @@ Plan CreateNewPlan()
     System.Threading.Thread.Sleep(3000);
     Console.Clear();
 
-    return new Plan(name, priority, category);
+    return new Plan(name, dateTime, priority, category);
 }
 bool CheckDateTimeFormat(string dateTime)
 {
@@ -197,7 +200,7 @@ DateTime PromptDateTime()
 }
 bool CheckPriority(int priority)
 {
-    if (priority < 0 || priority > 10)
+    if (priority < 1 || priority > 10)
     {
         Console.Clear();
         Console.WriteLine("BŁĄD! Podany priorytet wykracza poza skale!");
@@ -211,15 +214,147 @@ bool CheckPriority(int priority)
 void EditPlan()
 {
     Console.Clear();
-    Console.WriteLine("Wybierz plan, który chcesz edytować.\n");
+    Console.WriteLine("Wybierz plan, który chcesz edytować.");
 
-    int i = 1;
-    foreach(var plan in PlanList)
+    (int left, int top) = Console.GetCursorPosition();
+    var option = 0;
+    var decorator = "✅ \u001b[32m";
+    ConsoleKeyInfo key;
+    bool isSelected = false;
+
+
+    while (!isSelected)
     {
+        Console.SetCursorPosition(left, top);
 
+        ShowAllPlans(option, decorator);
+
+        key = Console.ReadKey(false);
+
+        switch (key.Key)
+        {
+            case ConsoleKey.UpArrow:
+                if (option == 0) option = PlanList.Count;
+                else option -= 1;
+                break;
+
+            case ConsoleKey.DownArrow:
+                if (option == PlanList.Count) option = 0;
+                else option += 1;
+                break;
+
+            case ConsoleKey.Enter:
+                isSelected = true;
+                break;
+        }
     }
 
-    Console.ReadKey();
+    if(option != PlanList.Count)
+    {
+        ChangeDataInPlan(PlanList[option]);
+    }
+}
+void ChangeDataInPlan(Plan plan)
+{
+    Console.Clear();
+    Console.WriteLine("Edycja planu. Kliknij klawisz \"Enter\" aby pominąć daną informację.\n");
+
+    Console.WriteLine($"Podaj nazwę planu (dawniej {plan.EventName}):");
+    string name = Console.ReadLine();
+    if(!string.IsNullOrEmpty(name))
+        plan.EventName = name;
+    
+    VisibleTextInEdit += $"Edycja planu. Kliknij klawisz \"Enter\" aby pominąć daną informację.\n\nPodaj nazwę planu (dawniej {plan.EventName}):\n" + name + "\nPodaj datę końca wydarzenia(RRRR-MM-DD): \n";
+    Console.WriteLine("Podaj datę końca wydarzenia(RRRR-MM-DD): ");
+    DateTime dateTime;
+
+    bool isDateTimeFormatCorrect = false;
+    while (!isDateTimeFormatCorrect)
+    {
+        string dateTimeString = Console.ReadLine();
+        if(string.IsNullOrEmpty(dateTimeString))
+        {
+            isDateTimeFormatCorrect = true;
+            continue;
+        }
+
+        if (!CheckDateTimeFormat(dateTimeString))
+        {
+            Console.Clear();
+            Console.Write(VisibleTextInEdit);
+            continue;
+        }
+        dateTime = DateTime.Parse(dateTimeString);
+
+        if (dateTime < DateTime.Now)
+        {
+            Console.Clear();
+            Console.WriteLine("BŁĄD! Data wydarzenia nie może być wcześniejsza niż aktualna data!");
+            System.Threading.Thread.Sleep(3000);
+            Console.Clear();
+            Console.Write(VisibleTextInEdit);
+        }
+        else
+        {
+            VisibleTextInEdit += dateTime;
+            VisibleTextInEdit += '\n';
+            isDateTimeFormatCorrect = true;
+        }
+        plan.Date = dateTime;
+    }
+
+    Console.WriteLine($"Podaj priorytet (1-10) (dawniej {plan.Priority}):");
+    VisibleTextInEdit += $"Podaj priorytet (1-10) (dawniej {plan.Priority}): \n";
+
+    bool isPriorityCorrect = false;
+    while (!isPriorityCorrect)
+    {
+        string priorityString = Convert.ToString(Console.ReadLine());
+        int priority;
+        if (!string.IsNullOrEmpty(priorityString))
+        {
+            priority = Convert.ToInt32(priorityString);
+
+
+            if (CheckPriority(priority))
+            {
+                VisibleTextInEdit += priority + '\n';
+                isPriorityCorrect = true;
+            }
+            else
+            {
+                Console.Clear();
+                Console.Write(VisibleTextInEdit);
+                continue;
+            }
+            plan.Priority = priority;
+        }
+        else break;
+    }
+    
+
+    Console.WriteLine("Podaj kategorię: ");
+    string category = ChooseCategory();
+    plan.Category = category;
+    System.Threading.Thread.Sleep(1000);
+
+    Console.WriteLine($"Pomyslnie zedytowano plan o nazwie: {plan.EventName}\n\n");
+    Console.WriteLine(".d8888b 888  888 .d8888b .d8888b .d88b. .d8888b .d8888b  \r\n88K     888  888d88P\"   d88P\"   d8P  Y8b88K     88K      \r\n\"Y8888b.888  888888     888     88888888\"Y8888b.\"Y8888b. \r\n     X88Y88b 888Y88b.   Y88b.   Y8b.         X88     X88 \r\n 88888P' \"Y88888 \"Y8888P \"Y8888P \"Y8888  88888P' 88888P' ");
+
+    System.Threading.Thread.Sleep(3000);
+    Console.Clear();
+    System.Threading.Thread.Sleep(1000);
+
+}
+void ShowAllPlans(int option, string decorator)
+{
+    for(int i = 0; i <= PlanList.Count; ++i)
+    {
+        if(i == PlanList.Count)
+            Console.WriteLine($"{(option == i ? decorator : "   ")}Wyjście\u001b[0m");
+        else
+            Console.WriteLine($"{(option == i ? decorator : "   ")}{PlanList[i].EventName}\u001b[0m");
+    }
 }
 void BrowsePlans()
 {
