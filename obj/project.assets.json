@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\kubap\\OneDrive\\Pulpit\\Studia\\KCK\\Planer-Terminal\\Planer.csproj",
+      "projectUniqueName": "C:\\Users\\kubap\\Desktop\\Semestr V\\KCK\\Planer\\Planer.csproj",
       "projectName": "Planer",
-      "projectPath": "C:\\Users\\kubap\\OneDrive\\Pulpit\\Studia\\KCK\\Planer-Terminal\\Planer.csproj",
+      "projectPath": "C:\\Users\\kubap\\Desktop\\Semestr V\\KCK\\Planer\\Planer.csproj",
       "packagesPath": "C:\\Users\\kubap\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\kubap\\OneDrive\\Pulpit\\Studia\\KCK\\Planer-Terminal\\obj\\",
+      "outputPath": "C:\\Users\\kubap\\Desktop\\Semestr V\\KCK\\Planer\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\kubap\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -61,7 +61,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.402\\RuntimeIdentifierGraph.json"
       }
     }
   }

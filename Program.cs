@@ -73,10 +73,10 @@ void StartMainMenu()
 }
 void ShowMainOptions(int option, string decorator)
 {
-    Console.WriteLine($"{(option == 1 ? decorator : "   ")}Add new plan\u001b[0m");
-    Console.WriteLine($"{(option == 2 ? decorator : "   ")}Edit plans\u001b[0m");
-    Console.WriteLine($"{(option == 3 ? decorator : "   ")}Browse your plans\u001b[0m");
-    Console.WriteLine($"{(option == 4 ? decorator : "   ")}Exit\u001b[0m");
+    Console.WriteLine($"{(option == 1 ? decorator : "   ")}Dodaj nowy plan\u001b[0m");
+    Console.WriteLine($"{(option == 2 ? decorator : "   ")}Edytuj istniejący plan\u001b[0m");
+    Console.WriteLine($"{(option == 3 ? decorator : "   ")}Przeglądaj istniejące plany\u001b[0m");
+    Console.WriteLine($"{(option == 4 ? decorator : "   ")}Zakończ\u001b[0m");
 }
 void AddNewPlan()
 {
@@ -103,13 +103,12 @@ Plan CreateNewPlan()
     while (!isDateTimeFormatCorrect)
     {
         string dateTimeString = Console.ReadLine();
-        if (!CheckDateTimeFormat(dateTimeString))
+        if (!CheckDateTimeFormat(dateTimeString, out dateTime))
         {
             Console.Clear();
             Console.Write(VisibleText);
             continue;
         }
-        dateTime = DateTime.Parse(dateTimeString);
 
         if (dateTime < DateTime.Now)
         {
@@ -159,8 +158,17 @@ Plan CreateNewPlan()
 
     return new Plan(name, dateTime, priority, category);
 }
-bool CheckDateTimeFormat(string dateTime)
-{
+bool CheckDateTimeFormat(string dateTime,out DateTime dateTime2)
+{   
+    if(!DateTime.TryParse(dateTime, out dateTime2))
+    {
+        Console.Clear();
+        Console.WriteLine("BŁĄD! Błędna data!");
+        System.Threading.Thread.Sleep(3000);
+        Console.Clear();
+
+        return false;
+    }
     if (string.IsNullOrEmpty(dateTime) || dateTime.Length < 9)
     {
         Console.Clear();
@@ -189,14 +197,6 @@ bool CheckDateTimeFormat(string dateTime)
         return false;
     }
     else return true;
-}
-DateTime PromptDateTime()
-{
-    var day = Convert.ToInt32(Console.ReadLine());
-    var month = Convert.ToInt32(Console.ReadLine());
-    var year = Convert.ToInt32(Console.ReadLine());
-
-    return new DateTime(year, month, day, 0, 0, 0, 0);
 }
 bool CheckPriority(int priority)
 {
@@ -259,14 +259,14 @@ void ChangeDataInPlan(Plan plan)
     Console.Clear();
     Console.WriteLine("Edycja planu. Kliknij klawisz \"Enter\" aby pominąć daną informację.\n");
 
-    Console.WriteLine($"Podaj nazwę planu (dawniej {plan.EventName}):");
+    Console.WriteLine($"Podaj nazwę planu (dawniej: {plan.EventName}):");
     string name = Console.ReadLine();
     if(!string.IsNullOrEmpty(name))
         plan.EventName = name;
     
-    VisibleTextInEdit += $"Edycja planu. Kliknij klawisz \"Enter\" aby pominąć daną informację.\n\nPodaj nazwę planu (dawniej {plan.EventName}):\n" + name + "\nPodaj datę końca wydarzenia(RRRR-MM-DD): \n";
+    VisibleTextInEdit += $"Edycja planu. Kliknij klawisz \"Enter\" aby pominąć daną informację.\n\nPodaj nazwę planu (dawniej: {plan.EventName}):\n" + name + "\nPodaj datę końca wydarzenia(RRRR-MM-DD): \n";
     Console.WriteLine("Podaj datę końca wydarzenia(RRRR-MM-DD): ");
-    DateTime dateTime;
+    DateTime dateTime = DateTime.Now;
 
     bool isDateTimeFormatCorrect = false;
     while (!isDateTimeFormatCorrect)
@@ -278,13 +278,17 @@ void ChangeDataInPlan(Plan plan)
             continue;
         }
 
-        if (!CheckDateTimeFormat(dateTimeString))
+        if (!CheckDateTimeFormat(dateTimeString, out dateTime))
         {
             Console.Clear();
             Console.Write(VisibleTextInEdit);
             continue;
         }
-        dateTime = DateTime.Parse(dateTimeString);
+
+        if(!DateTime.TryParse(dateTimeString, out dateTime))
+        {
+            
+        }
 
         if (dateTime < DateTime.Now)
         {
@@ -303,8 +307,8 @@ void ChangeDataInPlan(Plan plan)
         plan.Date = dateTime;
     }
 
-    Console.WriteLine($"Podaj priorytet (1-10) (dawniej {plan.Priority}):");
-    VisibleTextInEdit += $"Podaj priorytet (1-10) (dawniej {plan.Priority}): \n";
+    Console.WriteLine($"Podaj priorytet (1-10) (dawniej: {plan.Priority}):");
+    VisibleTextInEdit += $"Podaj priorytet (1-10) (dawniej: {plan.Priority}): \n";
 
     bool isPriorityCorrect = false;
     while (!isPriorityCorrect)
@@ -334,11 +338,52 @@ void ChangeDataInPlan(Plan plan)
     
 
     Console.WriteLine("Podaj kategorię: ");
-    string category = ChooseCategory();
-    plan.Category = category;
+    string category = ChooseCategoryInEdit();
+    if(category != "")
+        plan.Category = category;
+    VisibleText += "Podaj kategorię:\n" + plan.Category;
+    Console.Write(VisibleTextInEdit);
+
+    Console.WriteLine("Czy ukończono: ");
+    (int left, int top) = Console.GetCursorPosition();
+    var option = 1;
+    var decorator = "✅ \u001b[32m";
+    ConsoleKeyInfo key;
+    bool isSelected = false;
+
+    while (!isSelected)
+    {
+        Console.SetCursorPosition(left, top);
+
+        Console.WriteLine($"{(option == 1 ? decorator : "   ")}TAK\u001b[0m");
+        Console.WriteLine($"{(option == 2 ? decorator : "   ")}NIE\u001b[0m");
+
+        key = Console.ReadKey(false);
+
+        switch (key.Key)
+        {
+            case ConsoleKey.UpArrow:
+                if (option == 1) option++;
+                else option--;
+                break;
+
+            case ConsoleKey.DownArrow:
+                if (option == 2) option--;
+                else option++;
+                break;
+
+            case ConsoleKey.Enter:
+                isSelected = true;
+                break;
+        }
+        if (option == 1) plan.IsEventFinished = true;
+        else plan.IsEventFinished = false;
+    }
+
+    Console.Clear();
     System.Threading.Thread.Sleep(1000);
 
-    Console.WriteLine($"Pomyslnie zedytowano plan o nazwie: {plan.EventName}\n\n");
+    Console.WriteLine($"Pomyślnie zedytowano plan o nazwie: {plan.EventName}\n\n");
     Console.WriteLine(".d8888b 888  888 .d8888b .d8888b .d88b. .d8888b .d8888b  \r\n88K     888  888d88P\"   d88P\"   d8P  Y8b88K     88K      \r\n\"Y8888b.888  888888     888     88888888\"Y8888b.\"Y8888b. \r\n     X88Y88b 888Y88b.   Y88b.   Y8b.         X88     X88 \r\n 88888P' \"Y88888 \"Y8888P \"Y8888P \"Y8888  88888P' 88888P' ");
 
     System.Threading.Thread.Sleep(3000);
@@ -351,27 +396,67 @@ void ShowAllPlans(int option, string decorator)
     for(int i = 0; i <= PlanList.Count; ++i)
     {
         if(i == PlanList.Count)
-            Console.WriteLine($"{(option == i ? decorator : "   ")}Wyjście\u001b[0m");
+            Console.WriteLine($"{(option == i ? decorator : "   ")}Anuluj\u001b[0m");
         else
-            Console.WriteLine($"{(option == i ? decorator : "   ")}{PlanList[i].EventName}\u001b[0m");
+            Console.WriteLine($"{(option == i ? decorator : "   ")}{PlanList[i].EventName} {(PlanList[i].IsEventFinished ? "UKOŃCZONO":"")}\u001b[0m");
     }
 }
 void BrowsePlans()
 {
     Console.Clear();
-    Console.WriteLine("Przeglądasz swoje plany: ");
+    Console.WriteLine("Wybierz plan, który chcesz przejrzeć.");
 
-    foreach(Plan plan in PlanList)
+    (int left, int top) = Console.GetCursorPosition();
+    var option = 0;
+    var decorator = "✅ \u001b[32m";
+    ConsoleKeyInfo key;
+    bool isSelected = false;
+
+
+    while (!isSelected)
     {
-        Console.WriteLine(plan.EventName);
+        Console.SetCursorPosition(left, top);
+
+        ShowAllPlans(option, decorator);
+
+        key = Console.ReadKey(false);
+
+        switch (key.Key)
+        {
+            case ConsoleKey.UpArrow:
+                if (option == 0) option = PlanList.Count;
+                else option -= 1;
+                break;
+
+            case ConsoleKey.DownArrow:
+                if (option == PlanList.Count) option = 0;
+                else option += 1;
+                break;
+
+            case ConsoleKey.Enter:
+                isSelected = true;
+                break;
+        }
     }
 
-    Console.WriteLine("\nWcisnij dowolny klawisz aby kontynuować.");
-    Console.ReadKey();
+    if (option != PlanList.Count)
+    {
+        Console.Clear();
+        Console.WriteLine($"Nazwa: {PlanList[option].EventName}");
+        Console.WriteLine($"Data zakończenia: {PlanList[option].Date.Date}");
+        Console.WriteLine($"Priorytet: {PlanList[option].Priority}");
+        Console.WriteLine($"Kategoria: {PlanList[option].Category}");
+        Console.WriteLine($"Czy ukończono: {(PlanList[option].IsEventFinished ? "TAK" : "NIE")}");
+
+        Console.WriteLine("\nKliknij dowolny klawisz aby skończyć przeglądanie.");
+        Console.ReadKey();
+        Console.Clear();
+    }
 }
+
 string ChooseCategory()
 {
-    string[] category = { "Sport", "Relax", "Work", "Food", "Automotive", "Health", "Games", "Study" };
+    string[] category = { "Sport", "Odpoczynek", "Praca", "Jedzenie", "Motoryzacja", "Zdrowie", "Gry", "Nauka" };
 
     (int left, int top) = Console.GetCursorPosition();
     var option = 1;
@@ -385,13 +470,13 @@ string ChooseCategory()
         Console.SetCursorPosition(left, top);
 
         Console.WriteLine($"{(option == 1 ? decorator : "   ")}Sport\u001b[0m");
-        Console.WriteLine($"{(option == 2 ? decorator : "   ")}Relax\u001b[0m");
-        Console.WriteLine($"{(option == 3 ? decorator : "   ")}Work\u001b[0m");
-        Console.WriteLine($"{(option == 4 ? decorator : "   ")}Food\u001b[0m");
-        Console.WriteLine($"{(option == 5 ? decorator : "   ")}Automotive\u001b[0m");
-        Console.WriteLine($"{(option == 6 ? decorator : "   ")}Health\u001b[0m");
-        Console.WriteLine($"{(option == 7 ? decorator : "   ")}Games\u001b[0m");
-        Console.WriteLine($"{(option == 8 ? decorator : "   ")}Study\u001b[0m");
+        Console.WriteLine($"{(option == 2 ? decorator : "   ")}Odpoczynek\u001b[0m");
+        Console.WriteLine($"{(option == 3 ? decorator : "   ")}Praca\u001b[0m");
+        Console.WriteLine($"{(option == 4 ? decorator : "   ")}Jedzenie\u001b[0m");
+        Console.WriteLine($"{(option == 5 ? decorator : "   ")}Motoryzacja\u001b[0m");
+        Console.WriteLine($"{(option == 6 ? decorator : "   ")}Zdrowie\u001b[0m");
+        Console.WriteLine($"{(option == 7 ? decorator : "   ")}Gry\u001b[0m");
+        Console.WriteLine($"{(option == 8 ? decorator : "   ")}Nauka\u001b[0m");
 
         key = Console.ReadKey(false);
 
@@ -416,4 +501,55 @@ string ChooseCategory()
     Console.Clear();
 
     return category[option-1];
+}
+
+string ChooseCategoryInEdit()
+{
+    string[] category = { "Sport", "Odpoczynek", "Praca", "Jedzenie", "Motoryzacja", "Zdrowie", "Gry", "Nauka" };
+
+    (int left, int top) = Console.GetCursorPosition();
+    var option = 1;
+    var decorator = "✅ \u001b[32m";
+    ConsoleKeyInfo key;
+    bool isSelected = false;
+
+
+    while (!isSelected)
+    {
+        Console.SetCursorPosition(left, top);
+
+        Console.WriteLine($"{(option == 1 ? decorator : "   ")}Sport\u001b[0m");
+        Console.WriteLine($"{(option == 2 ? decorator : "   ")}Odpoczynek\u001b[0m");
+        Console.WriteLine($"{(option == 3 ? decorator : "   ")}Praca\u001b[0m");
+        Console.WriteLine($"{(option == 4 ? decorator : "   ")}Jedzenie\u001b[0m");
+        Console.WriteLine($"{(option == 5 ? decorator : "   ")}Motoryzacja\u001b[0m");
+        Console.WriteLine($"{(option == 6 ? decorator : "   ")}Zdrowie\u001b[0m");
+        Console.WriteLine($"{(option == 7 ? decorator : "   ")}Gry\u001b[0m");
+        Console.WriteLine($"{(option == 8 ? decorator : "   ")}Nauka\u001b[0m");
+        Console.WriteLine($"{(option == 9 ? decorator : "   ")}Pomiń\u001b[0m");
+
+        key = Console.ReadKey(false);
+
+        switch (key.Key)
+        {
+            case ConsoleKey.UpArrow:
+                if (option == 1) option = 9;
+                else option -= 1;
+                break;
+
+            case ConsoleKey.DownArrow:
+                if (option == 9) option = 1;
+                else option += 1;
+                break;
+
+            case ConsoleKey.Enter:
+                isSelected = true;
+                break;
+        }
+    }
+
+    Console.Clear();
+
+    if (option == 9) return "";
+    else return category[option - 1];
 }
