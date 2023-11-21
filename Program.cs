@@ -1,6 +1,8 @@
 ﻿using Planer;
+using System;
 using System.ComponentModel.Design;
 using System.Text;
+using System.Xml.Linq;
 
 bool IsProgramRunning = true;
 List<Plan> PlanList = new List<Plan>();
@@ -93,7 +95,10 @@ Plan CreateNewPlan()
     VisibleText += "Podaj nazwę planu: \n";
     Console.WriteLine("Podaj nazwę planu: ");
 
-    string name = Console.ReadLine();
+    string name = string.Empty;
+
+    name = AddName();
+
     VisibleText += name + '\n';
     Console.WriteLine("Podaj datę końca wydarzenia(RRRR-MM-DD): ");
     VisibleText += "Podaj datę końca wydarzenia(RRRR-MM-DD): \n";
@@ -157,6 +162,50 @@ Plan CreateNewPlan()
     Console.Clear();
 
     return new Plan(name, dateTime, priority, category);
+}
+string AddName()
+{
+    string name = string.Empty;
+    bool isNameEmpty = true;
+
+    while (!isNameEmpty)
+    {
+        name = Console.ReadLine();
+        isNameEmpty = string.IsNullOrEmpty(name);
+        bool isNameAlreadyinUse = false;
+
+        foreach (Plan plan in PlanList)
+        {
+            if (name == plan.EventName)
+            {
+                isNameAlreadyinUse = true;
+                break;
+            }
+        }
+
+        if (isNameAlreadyinUse)
+        {
+            Console.Clear();
+            Console.WriteLine("BŁĄD! Podana nazwa planu już istnieje!");
+            System.Threading.Thread.Sleep(3000);
+            Console.Clear();
+
+            Console.Write(VisibleText);
+            continue;
+        }
+
+        if (isNameEmpty)
+        {
+            Console.Clear();
+            Console.WriteLine("BŁĄD! Nie podałeś żadnej nazwy!");
+            System.Threading.Thread.Sleep(3000);
+            Console.Clear();
+
+            Console.Write(VisibleText);
+            continue;
+        }
+    }
+    return name;
 }
 bool CheckDateTimeFormat(string dateTime,out DateTime dateTime2)
 {   
@@ -453,7 +502,6 @@ void BrowsePlans()
         Console.Clear();
     }
 }
-
 string ChooseCategory()
 {
     string[] category = { "Sport", "Odpoczynek", "Praca", "Jedzenie", "Motoryzacja", "Zdrowie", "Gry", "Nauka" };
@@ -502,7 +550,6 @@ string ChooseCategory()
 
     return category[option-1];
 }
-
 string ChooseCategoryInEdit()
 {
     string[] category = { "Sport", "Odpoczynek", "Praca", "Jedzenie", "Motoryzacja", "Zdrowie", "Gry", "Nauka" };
