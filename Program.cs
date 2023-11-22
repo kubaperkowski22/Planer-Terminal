@@ -6,7 +6,7 @@ using System.Xml.Linq;
 using System.Xml;
 using Newtonsoft.Json;
 
-const string jsonPath = @"C:\Users\kubap\Desktop\Semestr V\KCK\Planer\Plany.json";
+string jsonPath = Directory.GetCurrentDirectory()+"\\Plany.json";
 bool IsProgramRunning = true;
 List<Plan> PlanList = new List<Plan>();
 string VisibleText = "";
