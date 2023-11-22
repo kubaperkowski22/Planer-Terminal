@@ -131,6 +131,8 @@ Plan CreateNewPlan()
             Console.Clear();
             Console.WriteLine("BŁĄD! Data wydarzenia nie może być wcześniejsza niż aktualna data!");
             System.Threading.Thread.Sleep(3000);
+            while (Console.KeyAvailable)
+                Console.ReadKey(true);
             Console.Clear();
             Console.Write(VisibleText);
         }
@@ -164,12 +166,18 @@ Plan CreateNewPlan()
     
     Console.WriteLine("Podaj kategorię: ");
     string category = ChooseCategory();
+
     System.Threading.Thread.Sleep(1000);
+    while (Console.KeyAvailable)
+        Console.ReadKey(true);
 
     Console.WriteLine("Pomyslnie stworzono nowy plan.\n\n");
     Console.WriteLine(".d8888b 888  888 .d8888b .d8888b .d88b. .d8888b .d8888b  \r\n88K     888  888d88P\"   d88P\"   d8P  Y8b88K     88K      \r\n\"Y8888b.888  888888     888     88888888\"Y8888b.\"Y8888b. \r\n     X88Y88b 888Y88b.   Y88b.   Y8b.         X88     X88 \r\n 88888P' \"Y88888 \"Y8888P \"Y8888P \"Y8888  88888P' 88888P' ");
 
     System.Threading.Thread.Sleep(3000);
+    while (Console.KeyAvailable)
+        Console.ReadKey(true);
+
     Console.Clear();
 
     return new Plan(name, dateTime, priority, category);
@@ -199,6 +207,8 @@ string AddName()
             Console.Clear();
             Console.WriteLine("BŁĄD! Podana nazwa planu już istnieje!");
             System.Threading.Thread.Sleep(3000);
+            while (Console.KeyAvailable)
+                Console.ReadKey(true);
             Console.Clear();
 
             Console.Write(VisibleText);
@@ -210,6 +220,8 @@ string AddName()
             Console.Clear();
             Console.WriteLine("BŁĄD! Nie podałeś żadnej nazwy!");
             System.Threading.Thread.Sleep(3000);
+            while (Console.KeyAvailable)
+                Console.ReadKey(true);
             Console.Clear();
 
             Console.Write(VisibleText);
@@ -225,6 +237,8 @@ bool CheckDateTimeFormat(string dateTime,out DateTime dateTime2)
         Console.Clear();
         Console.WriteLine("BŁĄD! Błędna data!");
         System.Threading.Thread.Sleep(3000);
+        while (Console.KeyAvailable)
+            Console.ReadKey(true);
         Console.Clear();
 
         return false;
@@ -234,6 +248,8 @@ bool CheckDateTimeFormat(string dateTime,out DateTime dateTime2)
         Console.Clear();
         Console.WriteLine("BŁĄD! Nie podałeś daty!");
         System.Threading.Thread.Sleep(3000);
+        while (Console.KeyAvailable)
+            Console.ReadKey(true);
         Console.Clear();
 
         return false;
@@ -243,6 +259,8 @@ bool CheckDateTimeFormat(string dateTime,out DateTime dateTime2)
         Console.Clear();
         Console.WriteLine("BŁĄD! Niepoprawny format!");
         System.Threading.Thread.Sleep(3000);
+        while (Console.KeyAvailable)
+            Console.ReadKey(true);
         Console.Clear();
 
         return false;
@@ -252,6 +270,8 @@ bool CheckDateTimeFormat(string dateTime,out DateTime dateTime2)
         Console.Clear();
         Console.WriteLine("BŁĄD! Niepoprawny format");
         System.Threading.Thread.Sleep(3000);
+        while (Console.KeyAvailable)
+            Console.ReadKey(true);
         Console.Clear();
 
         return false;
@@ -265,6 +285,8 @@ bool CheckPriority(int priority)
         Console.Clear();
         Console.WriteLine("BŁĄD! Podany priorytet wykracza poza skale!");
         System.Threading.Thread.Sleep(3000);
+        while (Console.KeyAvailable)
+            Console.ReadKey(true);
         Console.Clear();
 
         return false;
@@ -346,6 +368,8 @@ void ChangeDataInPlan(Plan plan)
             Console.Clear();
             Console.WriteLine("BŁĄD! Podana nazwa planu już istnieje!");
             System.Threading.Thread.Sleep(3000);
+            while (Console.KeyAvailable)
+                Console.ReadKey(true);
             Console.Clear();
 
             Console.Write(VisibleTextInEdit);
@@ -393,6 +417,8 @@ void ChangeDataInPlan(Plan plan)
             Console.Clear();
             Console.WriteLine("BŁĄD! Data wydarzenia nie może być wcześniejsza niż aktualna data!");
             System.Threading.Thread.Sleep(3000);
+            while (Console.KeyAvailable)
+                Console.ReadKey(true);
             Console.Clear();
             Console.Write(VisibleTextInEdit);
         }
@@ -480,13 +506,19 @@ void ChangeDataInPlan(Plan plan)
 
     Console.Clear();
     System.Threading.Thread.Sleep(1000);
+    while (Console.KeyAvailable)
+        Console.ReadKey(true);
 
     Console.WriteLine($"Pomyślnie zedytowano plan o nazwie: {plan.EventName}\n\n");
     Console.WriteLine(".d8888b 888  888 .d8888b .d8888b .d88b. .d8888b .d8888b  \r\n88K     888  888d88P\"   d88P\"   d8P  Y8b88K     88K      \r\n\"Y8888b.888  888888     888     88888888\"Y8888b.\"Y8888b. \r\n     X88Y88b 888Y88b.   Y88b.   Y8b.         X88     X88 \r\n 88888P' \"Y88888 \"Y8888P \"Y8888P \"Y8888  88888P' 88888P' ");
 
     System.Threading.Thread.Sleep(3000);
+    while (Console.KeyAvailable)
+        Console.ReadKey(true);
     Console.Clear();
     System.Threading.Thread.Sleep(1000);
+    while (Console.KeyAvailable)
+        Console.ReadKey(true);
 
 }
 void ShowAllPlans(int option, string decorator)
@@ -657,6 +689,8 @@ void OpenPlanList()
     Console.Clear();
     Console.WriteLine("Pomyślnie otwarto plany z pliku .json");
     System.Threading.Thread.Sleep(3000);
+    while (Console.KeyAvailable)
+        Console.ReadKey(true);
 }
 void SavePlanList(List<Plan> planList)
 {
@@ -667,4 +701,6 @@ void SavePlanList(List<Plan> planList)
     Console.Clear();
     Console.WriteLine("Pomyślnie zapisano plany do pliku .json");
     System.Threading.Thread.Sleep(3000);
+    while (Console.KeyAvailable)
+        Console.ReadKey(true);
 }
