@@ -323,11 +323,14 @@ void ChangeDataInPlan(Plan plan)
 
     string name = string.Empty;
     bool isNewNameCorrect = false;
-    bool isNewNameUnique = false;
+    bool isNewNameUnique = true;
     
     while(!isNewNameCorrect)
     {
         name = Console.ReadLine();
+
+        if (name == null || name == "")
+            break;
 
         foreach (var item in PlanList)
         {
@@ -352,7 +355,7 @@ void ChangeDataInPlan(Plan plan)
         if (!string.IsNullOrEmpty(name))
         {
             plan.EventName = name;
-            isNewNameCorrect = true;
+            isNewNameCorrect = !isNewNameCorrect;
             break;
         }
     }

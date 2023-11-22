@@ -1,1 +1,1 @@
-[{"EventName":"qwe","Date":"2222-12-12T00:00:00","Priority":2,"Category":"Praca","IsEventFinished":false},{"EventName":"plan numer 2","Date":"4444-12-12T00:00:00","Priority":9,"Category":"Gry","IsEventFinished":false}]
+[{"EventName":"qwe","Date":"2222-12-12T00:00:00","Priority":2,"Category":"Praca","IsEventFinished":true},{"EventName":"plan numer 2","Date":"4444-12-12T00:00:00","Priority":9,"Category":"Gry","IsEventFinished":false},{"EventName":"elo elo","Date":"2222-12-12T00:00:00","Priority":6,"Category":"Zdrowie","IsEventFinished":false}]
