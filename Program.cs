@@ -3,7 +3,10 @@ using System;
 using System.ComponentModel.Design;
 using System.Text;
 using System.Xml.Linq;
+using System.Xml;
+using Newtonsoft.Json;
 
+const string jsonPath = @"C:\Users\kubap\Desktop\Semestr V\KCK\Planer\Plany.json";
 bool IsProgramRunning = true;
 List<Plan> PlanList = new List<Plan>();
 string VisibleText = "";
@@ -30,12 +33,12 @@ while (IsProgramRunning)
         switch (key.Key)
         {
             case ConsoleKey.UpArrow:
-                if (option == 1) option = 4;
+                if (option == 1) option = 6;
                 else option -= 1;
                 break;
 
             case ConsoleKey.DownArrow:
-                if (option == 4) option = 1;
+                if (option == 6) option = 1;
                 else option += 1;
                 break;
 
@@ -57,6 +60,12 @@ while (IsProgramRunning)
             BrowsePlans();
             break;
         case 4:
+            OpenPlanList();
+            break;
+        case 5:
+            SavePlanList(PlanList);
+            break;
+        case 6:
             IsProgramRunning = false;
             break;
     }
@@ -78,7 +87,9 @@ void ShowMainOptions(int option, string decorator)
     Console.WriteLine($"{(option == 1 ? decorator : "   ")}Dodaj nowy plan\u001b[0m");
     Console.WriteLine($"{(option == 2 ? decorator : "   ")}Edytuj istniejący plan\u001b[0m");
     Console.WriteLine($"{(option == 3 ? decorator : "   ")}Przeglądaj istniejące plany\u001b[0m");
-    Console.WriteLine($"{(option == 4 ? decorator : "   ")}Zakończ\u001b[0m");
+    Console.WriteLine($"{(option == 4 ? decorator : "   ")}Otwórz plany\u001b[0m");
+    Console.WriteLine($"{(option == 5 ? decorator : "   ")}Zapisz plany\u001b[0m");
+    Console.WriteLine($"{(option == 6 ? decorator : "   ")}Zakończ\u001b[0m");
 }
 void AddNewPlan()
 {
@@ -168,7 +179,7 @@ string AddName()
     string name = string.Empty;
     bool isNameEmpty = true;
 
-    while (!isNameEmpty)
+    while (isNameEmpty)
     {
         name = Console.ReadLine();
         isNameEmpty = string.IsNullOrEmpty(name);
@@ -307,11 +318,46 @@ void ChangeDataInPlan(Plan plan)
 {
     Console.Clear();
     Console.WriteLine("Edycja planu. Kliknij klawisz \"Enter\" aby pominąć daną informację.\n");
-
+    VisibleTextInEdit += $"Edycja planu. Kliknij klawisz \"Enter\" aby pominąć daną informację.\n\nPodaj nazwę planu (dawniej: {plan.EventName}):\n";
     Console.WriteLine($"Podaj nazwę planu (dawniej: {plan.EventName}):");
-    string name = Console.ReadLine();
-    if(!string.IsNullOrEmpty(name))
-        plan.EventName = name;
+
+    string name = string.Empty;
+    bool isNewNameCorrect = false;
+    bool isNewNameUnique = false;
+    
+    while(!isNewNameCorrect)
+    {
+        name = Console.ReadLine();
+
+        foreach (var item in PlanList)
+        {
+            if (item.EventName == name)
+            {
+                isNewNameUnique = false;
+                break;
+            } 
+        }
+
+        if (!isNewNameUnique)
+        {
+            Console.Clear();
+            Console.WriteLine("BŁĄD! Podana nazwa planu już istnieje!");
+            System.Threading.Thread.Sleep(3000);
+            Console.Clear();
+
+            Console.Write(VisibleTextInEdit);
+            continue;
+        }
+
+        if (!string.IsNullOrEmpty(name))
+        {
+            plan.EventName = name;
+            isNewNameCorrect = true;
+            break;
+        }
+    }
+     
+    
     
     VisibleTextInEdit += $"Edycja planu. Kliknij klawisz \"Enter\" aby pominąć daną informację.\n\nPodaj nazwę planu (dawniej: {plan.EventName}):\n" + name + "\nPodaj datę końca wydarzenia(RRRR-MM-DD): \n";
     Console.WriteLine("Podaj datę końca wydarzenia(RRRR-MM-DD): ");
@@ -599,4 +645,23 @@ string ChooseCategoryInEdit()
 
     if (option == 9) return "";
     else return category[option - 1];
+}
+void OpenPlanList()
+{
+    string jsonString = File.ReadAllText(jsonPath);
+    PlanList = JsonConvert.DeserializeObject<List<Plan>>(jsonString);
+
+    Console.Clear();
+    Console.WriteLine("Pomyślnie otwarto plany z pliku .json");
+    System.Threading.Thread.Sleep(3000);
+}
+void SavePlanList(List<Plan> planList)
+{
+    string json = JsonConvert.SerializeObject(planList);
+
+    File.WriteAllText(jsonPath, json);
+
+    Console.Clear();
+    Console.WriteLine("Pomyślnie zapisano plany do pliku .json");
+    System.Threading.Thread.Sleep(3000);
 }

@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "x7OX1VkTcpJeWuXOfhL92o9g9S9uijqej5+GJNqwn1hpCLYGwGkTVT7H0kqu+dqHAmvP1AtWci+zd/wih/kfxQ==",
+  "dgSpecHash": "BbKmNxA3GTGuinsjn8rWBvy9oCdHhkLD+xRQ1PaiPIXTSq7sw9h4z9z3E+CmfcfuSZS4cFI0N1IfcwznLOKkCQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\kubap\\Desktop\\Semestr V\\KCK\\Planer\\Planer.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\kubap\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
+  ],
   "logs": []
 }

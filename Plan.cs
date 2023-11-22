@@ -3,16 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Planer
 {
-    internal class Plan : SmallerEvent
+    internal class Plan
     {
-        public string EventName;
-        public DateTime Date;
-        public int Priority;
-        public string Category;
-        public bool IsEventFinished;
+        [JsonPropertyName("EventName")]
+        public string EventName { get; set; }
+        [JsonPropertyName("Date")]
+        public DateTime Date { get; set; }
+        [JsonPropertyName("Priority")]
+        public int Priority {  get; set; }
+        [JsonPropertyName("Category")]
+        public string Category { get; set; }
+        [JsonPropertyName("IsFinished")]
+        public bool IsEventFinished { get; set; }
         public Plan() 
         {
             EventName = string.Empty;
@@ -28,20 +35,6 @@ namespace Planer
             Priority = priority;
             Category = category;
             IsEventFinished = false;
-        }
-    }
-
-    internal class SmallerEvent
-    {
-        string EventName;
-        DateTime Date;
-        int Priority;
-
-        public SmallerEvent()
-        {
-            EventName= string.Empty;
-            Date = DateTime.Now;
-            Priority = 0;
         }
     }
 }
